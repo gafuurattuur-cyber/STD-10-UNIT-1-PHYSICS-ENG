@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ഭൗതികശാസ്ത്രം - സ്റ്റാൻഡേർഡ് X | ശബ്ദതരംഗങ്ങൾ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+body{font-family:'Noto Sans',sans-serif;background:#f0f9ff;color:#0f172a}
+.app-container{max-width:800px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
+.screen{display:none;padding:20px;animation:fadeIn .3s}.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.btn-main{padding:12px 20px;border-radius:12px;font-weight:700;display:flex;align-items:center;gap:12px;width:100%;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2);text-align:left;font-size:1.05rem}
+.btn-main:active{transform:translateY(4px);box-shadow:none}
+.btn-action{background:#0284c7;color:#fff;padding:10px 20px;border-radius:8px;font-weight:700;box-shadow:0 4px 0 #0369a1;cursor:pointer}
+.btn-action:active{transform:translateY(4px);box-shadow:none}
+.header{background:#0369a1;color:#fff;padding:16px;display:flex;justify-content:space-between;align-items:center;border-radius:16px;margin-bottom:20px}
+.header h1{font-size:1.1rem;font-weight:700;margin:0}
+.back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:1.2rem;padding:4px 12px;border-radius:8px;cursor:pointer}
+.category-card{background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:20px}
+.category-title{font-size:1.2rem;font-weight:700;margin-bottom:16px;border-bottom:2px dashed #cbd5e1;padding-bottom:8px}
+.content-card{background:#fff;border:2px solid #bae6fd;border-radius:12px;padding:16px;margin-bottom:16px;font-size:1.05rem;line-height:1.7}
+.quiz-opt,.match-item{padding:12px;background:#f1f5f9;border:2px solid #cbd5e1;border-radius:8px;cursor:pointer;text-align:center;font-weight:700;font-size:1.05rem}
+.match-item.selected{background:#bae6fd;border-color:#0284c7}
+.match-item.matched{background:#bbf7d0;border-color:#16a34a;color:#16a34a}
+.memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.memory-card{aspect-ratio:1;background:#0ea5e9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:transparent;cursor:pointer;box-shadow:0 4px 0 #0369a1;padding:6px;text-align:center;transition:all .2s}
+.memory-card.revealed,.memory-card.matched{background:#fff;color:#1f2937;border:2px solid #0ea5e9;box-shadow:none}
+.memory-card.matched{background:#d1fae5;border-color:#059669}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:12px 24px;border-radius:8px;z-index:1000;display:none;opacity:0;font-weight:700;max-width:90%;text-align:center;font-size:1.1rem}
+.toast.show{display:block;opacity:1}
+.race-track{height:40px;background:#e2e8f0;border-radius:20px;position:relative;margin:20px 0;border:2px solid #cbd5e1}
+.car{font-size:2rem;position:absolute;top:-5px;left:0;transition:left .3s}
+input.game-input{width:100%;padding:10px;border:2px solid #cbd5e1;border-radius:8px;font-size:1.2rem;text-align:center;font-weight:700;margin-bottom:10px}
+@media print{.no-print{display:none!important}}
+.formula-box{background:#e0f2fe;border:2px solid #0284c7;border-radius:12px;padding:12px;margin:10px 0;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+<div class="app-container">
+<div id="homeScreen" class="screen active">
+  <div class="text-center mb-6 pt-2">
+    <h1 class="text-3xl font-bold text-sky-800">Physics — Standard X</h1>
+    <p class="text-sky-600 font-bold text-xl mt-1">Chapter 1: Sound Waves</p>
+    <p class="text-sm text-gray-500 mt-2">ആന്ദോളനം • ആവൃത്തി • തരംഗങ്ങൾ • പ്രതിധ്വനി</p>
+  </div>
+  
+  <div class="category-card border-blue-200"><h3 class="category-title text-blue-800">📖 1. പഠിക്കാം (Learn)</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <button class="btn-main bg-blue-500" onclick="showScreen('learn1')"><span class="text-2xl">🔄</span> ആന്ദോളനം</button>
+      <button class="btn-main bg-cyan-500" onclick="showScreen('learn2')"><span class="text-2xl">⏱</span> പീരിയഡ് & ആവൃത്തി</button>
+      <button class="btn-main bg-sky-500" onclick="showScreen('learn3')"><span class="text-2xl">🔊</span> പ്രേരിതകമനം & അനുനാദം</button>
+      <button class="btn-main bg-indigo-500" onclick="showScreen('learn4')"><span class="text-2xl">🌊</span> തരംഗചലനം</button>
+      <button class="btn-main bg-violet-500" onclick="showScreen('learn5')"><span class="text-2xl">📏</span> തരംഗ സവിശേഷതകൾ</button>
+      <button class="btn-main bg-purple-500" onclick="showScreen('learn6')"><span class="text-2xl">🔁</span> ശബ്ദത്തിന്റെ പ്രതിധ്വനി</button>
+    </div>
+  </div>
+
+  <div class="category-card border-pink-200"><h3 class="category-title text-pink-800">🎯 2. അഭ്യാസം (Practice)</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <button class="btn-main bg-pink-500" onclick="initAmp();showScreen('ampScreen')"><span class="text-2xl">📈</span> ആയാമം</button>
+      <button class="btn-main bg-rose-500" onclick="initPeriod();showScreen('periodScreen')"><span class="text-2xl">⏱</span> പീരിയഡ്</button>
+      <button class="btn-main bg-fuchsia-500" onclick="initFreq();showScreen('freqScreen')"><span class="text-2xl">Hz</span> ആവൃത്തി</button>
+      <button class="btn-main bg-purple-500" onclick="initWave();showScreen('waveScreen')"><span class="text-2xl">λ</span> തരംഗദൈർഘ്യം</button>
+      <button class="btn-main bg-pink-600" onclick="initSpeed();showScreen('speedScreen')"><span class="text-2xl">v</span> തരംഗവേഗം</button>
+      <button class="btn-main bg-rose-600" onclick="initRes();showScreen('resScreen')"><span class="text-2xl">🔔</span> അനുനാദം</button>
+      <button class="btn-main bg-fuchsia-600" onclick="initType();showScreen('typeScreen')"><span class="text-2xl">↕️</span> തരംഗ തരങ്ങൾ</button>
+      <button class="btn-main bg-purple-600" onclick="initEcho();showScreen('echoScreen')"><span class="text-2xl">📢</span> പ്രതിധ്വനി</button>
+    </div>
+  </div>
+
+  <div class="category-card border-amber-200"><h3 class="category-title text-amber-800">🧩 3. ലോജിക് ചലഞ്ചുകൾ</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <button class="btn-main bg-amber-500" onclick="initPend();showScreen('pendScreen')"><span class="text-2xl">🕰️</span> പെൻഡുലം</button>
+      <button class="btn-main bg-orange-500" onclick="initTuning();showScreen('tuningScreen')"><span class="text-2xl">🔱</span> ട്യൂണിങ് ഫോർക്ക്</button>
+      <button class="btn-main bg-yellow-500 text-gray-900" onclick="initMed();showScreen('medScreen')"><span class="text-2xl">💨</span> മാധ്യമം</button>
+      <button class="btn-main bg-lime-500" onclick="initLong();showScreen('longScreen')"><span class="text-2xl">➡️</span> അനുദൈർഘ്യ തരംഗം</button>
+      <button class="btn-main bg-amber-600" onclick="initTrans();showScreen('transScreen')"><span class="text-2xl">↕️</span> അനുപ്രസ്ഥ തരംഗം</button>
+      <button class="btn-main bg-orange-600" onclick="initVFL();showScreen('vflScreen')"><span class="text-2xl">v=fλ</span> ബന്ധം</button>
+      <button class="btn-main bg-yellow-600 text-gray-900" onclick="initApp();showScreen('appScreen')"><span class="text-2xl">🏥</span> പ്രയോഗങ്ങൾ</button>
+      <button class="btn-main bg-lime-600" onclick="initTFLogic();showScreen('tfLogicScreen')"><span class="text-2xl">✅</span> ശരി / തെറ്റ്</button>
+    </div>
+  </div>
+
+  <div class="category-card border-teal-200"><h3 class="category-title text-teal-800">🎮 4. കളിച്ച് പഠിക്കാം</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <button class="btn-main bg-teal-500" onclick="initMem();showScreen('memScreen')"><span class="text-2xl">🃏</span> മെമ്മറി ഗെയിം</button>
+      <button class="btn-main bg-emerald-500" onclick="initRace();showScreen('raceScreen')"><span class="text-2xl">🏎️</span> ശബ്ദ റേസ്</button>
+      <button class="btn-main bg-green-500" onclick="initQuick();showScreen('quickScreen')"><span class="text-2xl">⚡</span> സ്പീഡ് ക്വിസ്</button>
+      <button class="btn-main bg-cyan-600" onclick="initTrueFalse();showScreen('tfScreen')"><span class="text-2xl">✅</span> ശരി അല്ലെങ്കിൽ തെറ്റ്</button>
+      <button class="btn-main bg-teal-600" onclick="initFillBlank();showScreen('fillBlankScreen')"><span class="text-2xl">✏️</span> ശൂന്യസ്ഥാനം പൂരിപ്പിക്കുക</button>
+      <button class="btn-main bg-emerald-600" onclick="initSpotError();showScreen('spotErrorScreen')"><span class="text-2xl">🚨</span> തെറ്റ് കണ്ടെത്തുക</button>
+      <button class="btn-main bg-green-600" onclick="initMatchGame();showScreen('matchGameScreen')"><span class="text-2xl">🔗</span> ജോടി ചേർക്കുക</button>
+      <button class="btn-main bg-cyan-700" onclick="initBuilder();showScreen('builderScreen')"><span class="text-2xl">🧩</span> ഫോർമുല ബിൽഡർ</button>
+      <button class="btn-main bg-teal-700" onclick="initQuickFire();showScreen('quickFireScreen')"><span class="text-2xl">🔥</span> ക്വിക്ക് ഫയർ</button>
+      <button class="btn-main bg-emerald-700" onclick="initSumRace();showScreen('sumRaceScreen')"><span class="text-2xl">🏁</span> ആവൃത്തി റേസ്</button>
+    </div>
+  </div>
+
+  <div class="category-card border-emerald-200"><h3 class="category-title text-emerald-800">📝 5. പരീക്ഷ കോർണർ</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <button class="btn-main bg-teal-600" onclick="initQuiz();showScreen('quizScreen')"><span class="text-2xl">🏆</span> മെഗാ ക്വിസ് (20 ചോദ്യം)</button>
+      <button class="btn-main bg-emerald-600" onclick="showScreen('matchScreen')"><span class="text-2xl">🔗</span> ചേർത്തെഴുതുക</button>
+      <button class="btn-main bg-green-600" onclick="showScreen('modelQPScreen')"><span class="text-2xl">📋</span> മോഡൽ ചോദ്യങ്ങൾ</button>
+      <button class="btn-main bg-lime-600" onclick="showScreen('unitTestScreen')"><span class="text-2xl">📄</span> യൂണിറ്റ് ടെസ്റ്റ്</button>
+      <button class="btn-main bg-teal-700" onclick="initChapterTest();showScreen('chapterTestScreen')"><span class="text-2xl">📚</span> അധ്യായ പരീക്ഷ</button>
+      <button class="btn-main bg-emerald-700" onclick="showScreen('selfAssessScreen')"><span class="text-2xl">📊</span> സ്വയം വിലയിരുത്തൽ</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEARN -->
+<div id="learn1" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ആന്ദോളനം</h1></div>
+  <div class="content-card space-y-3">
+    <p>ഒരു വസ്തു തുലനസ്ഥാനത്തെ ആസ്പദമാക്കി ക്രമമായ ഇടവേളകളിൽ മുന്നോട്ടും പിന്നോട്ടും ചലിക്കുന്നതാണ് <b>ആന്ദോളനം (Oscillation)</b>.</p>
+    <div class="formula-box">തുലനസ്ഥാനത്ത് നിന്ന് ഒരു വശത്തേക്കുള്ള പരമാവധി സ്ഥാനാന്തരം = <b>ആയാമം (Amplitude)</b><br>SI യൂണിറ്റ്: മീറ്റർ (m)</div>
+  </div>
+</div>
+
+<div id="learn2" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>പീരിയഡ് & ആവൃത്തി</h1></div>
+  <div class="content-card space-y-3">
+    <p><b>പീരിയഡ് (T)</b>: ഒരു ആന്ദോളനം പൂർത്തിയാക്കാൻ ആവശ്യമായ സമയം. യൂണിറ്റ്: സെക്കൻഡ് (s)</p>
+    <p><b>ആവൃത്തി (f)</b>: ഒരു സെക്കൻഡിൽ ഉണ്ടാകുന്ന ആന്ദോളനങ്ങളുടെ എണ്ണം. യൂണിറ്റ്: ഹെർട്സ് (Hz)</p>
+    <div class="formula-box">f = 1 / T<br>T = 1 / f</div>
+  </div>
+</div>
+
+<div id="learn3" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>പ്രേരിതകമനം & അനുനാദം</h1></div>
+  <div class="content-card space-y-3">
+    <p><b>പ്രേരിതകമനം</b>: ഒരു വസ്തുവിന്റെ കമനം മൂലം മറ്റൊരു വസ്തു കമനം ചെയ്യുന്നത്.</p>
+    <p><b>അനുനാദം (Resonance)</b>: പ്രേരിതകമനത്തിന് വിധേയമാകുന്ന വസ്തുവിന്റെ സ്വാഭാവിക ആവൃത്തിയും പ്രേരണ ചെയ്യുന്ന വസ്തുവിന്റെ ആവൃത്തിയും തുല്യമായാൽ ഉണ്ടാകുന്ന പ്രതിഭാസം. അപ്പോൾ പരമാവധി ആയാമത്തിൽ കമനം ചെയ്യും.</p>
+  </div>
+</div>
+
+<div id="learn4" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>തരംഗചലനം</h1></div>
+  <div class="content-card space-y-3">
+    <p>മാധ്യമത്തിന്റെ ഒരു ഭാഗത്ത് ലഭിക്കുന്ന ഊർജ്ജം ദോലനങ്ങളിലൂടെ തുടർച്ചയായി പ്രവഹിക്കുന്നതാണ് <b>തരംഗചലനം</b>.</p>
+    <p><b>യാന്ത്രികതരംഗങ്ങൾ</b>: മാധ്യമം ആവശ്യം (ശബ്ദം, ജലതരംഗം)<br><b>വൈദ്യുതകാന്തികതരംഗങ്ങൾ</b>: മാധ്യമം ആവശ്യമില്ല (പ്രകാശം, റേഡിയോ)</p>
+  </div>
+</div>
+
+<div id="learn5" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>തരംഗ സവിശേഷതകൾ</h1></div>
+  <div class="content-card space-y-3">
+    <div class="formula-box">തരംഗവേഗം v = f × λ<br>(ആവൃത്തി × തരംഗദൈർഘ്യം)</div>
+    <p><b>തരംഗദൈർഘ്യം (λ)</b>: അടുത്തടുത്ത രണ്ട് ശൃംഗങ്ങൾ / ഉച്ചമർദ്ദമേഖലകൾ തമ്മിലുള്ള അകലം. യൂണിറ്റ്: m</p>
+  </div>
+</div>
+
+<div id="learn6" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ശബ്ദത്തിന്റെ പ്രതിധ്വനി</h1></div>
+  <div class="content-card space-y-3">
+    <p>ശബ്ദതരംഗങ്ങൾ കട്ടിയുള്ള പ്രതലങ്ങളിൽ തട്ടി പ്രതിഫലിക്കും. മിനുസമുള്ള പ്രതലങ്ങൾ നല്ല പ്രതിഫലനം നൽകും.</p>
+    <p>പ്രയോഗങ്ങൾ: സോണാർ, സ്റ്റെതസ്കോപ്പ്, ഹാൾ സീലിങ്ങുകൾ, ശബ്ദബോക്സ്.</p>
+  </div>
+</div>
+
+<!-- PRACTICE screens (simplified for length) -->
+<div id="ampScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ആയാമം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="ampQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="ampOpts"></div>
+  </div>
+</div>
+<div id="periodScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>പീരിയഡ്</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="perQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="perOpts"></div>
+  </div>
+</div>
+<div id="freqScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ആവൃത്തി</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="frQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="frOpts"></div>
+  </div>
+</div>
+<div id="waveScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>തരംഗദൈർഘ്യം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="wvQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="wvOpts"></div>
+  </div>
+</div>
+<div id="speedScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>തരംഗവേഗം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="spQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="spOpts"></div>
+  </div>
+</div>
+<div id="resScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>അനുനാദം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="rsQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="rsOpts"></div>
+  </div>
+</div>
+<div id="typeScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>തരംഗ തരങ്ങൾ</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="tyQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="tyOpts"></div>
+  </div>
+</div>
+<div id="echoScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>പ്രതിധ്വനി</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="ecQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="ecOpts"></div>
+  </div>
+</div>
+
+<!-- LOGIC -->
+<div id="pendScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>പെൻഡുലം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="pdQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="pdOpts"></div>
+  </div>
+</div>
+<div id="tuningScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ട്യൂണിങ് ഫോർക്ക്</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="tuQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="tuOpts"></div>
+  </div>
+</div>
+<div id="medScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>മാധ്യമം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="mdQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="mdOpts"></div>
+  </div>
+</div>
+<div id="longScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>അനുദൈർഘ്യ തരംഗം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="lgQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="lgOpts"></div>
+  </div>
+</div>
+<div id="transScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>അനുപ്രസ്ഥ തരംഗം</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="trQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="trOpts"></div>
+  </div>
+</div>
+<div id="vflScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>v = fλ</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="vfQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="vfOpts"></div>
+  </div>
+</div>
+<div id="appScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>പ്രയോഗങ്ങൾ</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="apQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="apOpts"></div>
+  </div>
+</div>
+<div id="tfLogicScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ശരി / തെറ്റ്</h1></div>
+  <div class="content-card text-center">
+    <p class="text-xl font-bold my-6" id="tflQ"></p>
+    <div class="grid grid-cols-2 gap-4 mt-6">
+      <button class="quiz-opt py-6 text-green-700 bg-green-50 border-green-300" onclick="checkTFL(true)">ശരി</button>
+      <button class="quiz-opt py-6 text-red-700 bg-red-50 border-red-300" onclick="checkTFL(false)">തെറ്റ്</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAMES -->
+<div id="memScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>മെമ്മറി ഗെയിം</h1></div>
+  <div class="content-card text-center">
+    <p class="mb-3 font-bold text-sm text-gray-600">പദവും അർത്ഥവും ജോടി ചേർക്കുക</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="flex justify-between mt-4">
+      <p id="memoryMoves" class="font-bold text-sky-600">നീക്കങ്ങൾ: 0</p>
+      <button class="btn-action py-1 px-4" onclick="initMem()">വീണ്ടും</button>
+    </div>
+  </div>
+</div>
+<div id="raceScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ശബ്ദ റേസ്</h1></div>
+  <div class="content-card text-center">
+    <div class="font-bold text-blue-600 text-xl">പോയിന്റ്: <span id="racePts">0</span>/100</div>
+    <div class="race-track"><div class="car" id="raceCar">🏎️</div></div>
+    <p class="text-xl font-bold my-4" id="raceQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="raceOpts"></div>
+  </div>
+</div>
+<div id="quickScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>സ്പീഡ് ക്വിസ്</h1></div>
+  <div class="content-card text-center">
+    <p class="text-xl font-bold my-6 min-h-[60px]" id="qkQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="qkOpts"></div>
+    <p class="mt-6 font-bold text-2xl text-rose-600" id="qkScore">സ്കോർ: 0</p>
+  </div>
+</div>
+<div id="tfScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ശരി അല്ലെങ്കിൽ തെറ്റ്</h1></div>
+  <div class="content-card text-center">
+    <p class="text-xl font-bold my-6" id="tfQ"></p>
+    <div class="grid grid-cols-2 gap-4 mt-6">
+      <button class="quiz-opt py-6 text-green-700 bg-green-50 border-green-300" onclick="checkTF(true)">ശരി</button>
+      <button class="quiz-opt py-6 text-red-700 bg-red-50 border-red-300" onclick="checkTF(false)">തെറ്റ്</button>
+    </div>
+  </div>
+</div>
+<div id="fillBlankScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ശൂന്യസ്ഥാനം പൂരിപ്പിക്കുക</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg">പൂരിപ്പിക്കുക</p>
+    <p class="text-xl font-bold text-indigo-700 my-4" id="fbQ"></p>
+    <input id="fbAns" type="text" class="game-input" placeholder="ഉത്തരം ടൈപ്പ് ചെയ്യുക">
+    <button class="btn-action w-full mt-2" onclick="checkFillBlank()">പരിശോധിക്കുക</button>
+    <button class="bg-gray-200 font-bold w-full py-3 rounded-lg mt-3" onclick="initFillBlank()">അടുത്തത്</button>
+  </div>
+</div>
+<div id="spotErrorScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>തെറ്റ് കണ്ടെത്തുക</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg">ഏതാണ് തെറ്റ്?</p>
+    <p class="text-lg font-bold text-rose-700 my-4" id="seQ"></p>
+    <div class="grid grid-cols-1 gap-3" id="seOpts"></div>
+  </div>
+</div>
+<div id="matchGameScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ജോടി ചേർക്കുക</h1></div>
+  <div class="content-card"><div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-3" id="mg-left"></div>
+    <div class="flex flex-col gap-3" id="mg-right"></div>
+  </div><button class="btn-action w-full mt-6" onclick="initMatchGame()">റീസെറ്റ്</button></div>
+</div>
+<div id="builderScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ഫോർമുല ബിൽഡർ</h1></div>
+  <div class="content-card text-center">
+    <p class="font-bold mb-3 text-lg" id="buQ"></p>
+    <input id="buAns" type="text" class="game-input" placeholder="ഉദാ: v=fλ">
+    <button class="btn-action w-full mt-2" onclick="checkBuilder()">പരിശോധിക്കുക</button>
+    <button class="bg-gray-200 font-bold w-full py-3 rounded-lg mt-3" onclick="initBuilder()">അടുത്തത്</button>
+  </div>
+</div>
+<div id="quickFireScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ക്വിക്ക് ഫയർ</h1></div>
+  <div class="content-card text-center">
+    <p class="text-xl font-bold my-6 min-h-[60px]" id="qfQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="qfOpts"></div>
+    <p class="mt-6 font-bold text-2xl text-rose-600" id="qfScore">സ്കോർ: 0</p>
+  </div>
+</div>
+<div id="sumRaceScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ആവൃത്തി റേസ്</h1></div>
+  <div class="content-card text-center">
+    <div class="font-bold text-blue-600 text-xl">സ്കോർ: <span id="srPts">0</span></div>
+    <p class="text-xl font-bold my-4" id="srQ"></p>
+    <div class="grid grid-cols-2 gap-3" id="srOpts"></div>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div id="quizScreen" class="screen">
+  <div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>മെഗാ ക്വിസ്</h1>
+    <div id="quizProgress" class="font-bold bg-white text-sky-700 px-3 py-1 rounded-lg">1/20</div>
+  </div>
+  <div class="content-card min-h-[300px]">
+    <div id="quizQuestionArea">
+      <h3 id="questionText" class="font-bold text-xl mb-6"></h3>
+      <div id="optionsGrid" class="grid gap-3"></div>
+    </div>
+    <div id="quizResultArea" style="display:none" class="text-center py-4">
+      <div class="text-7xl">🏆</div>
+      <h2 class="text-3xl font-bold text-sky-600 my-3">പൂർത്തിയായി!</h2>
+      <p class="text-xl font-bold mb-6">സ്കോർ: <span id="finalScore" class="text-4xl text-blue-600">0</span>/20</p>
+      <button class="btn-action w-full py-4" onclick="initQuiz()">വീണ്ടും കളിക്കുക</button>
+    </div>
+  </div>
+</div>
+
+<div id="matchScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>ചേർത്തെഴുതുക</h1></div>
+  <div class="content-card"><div class="grid grid-cols-2 gap-4">
+    <div class="flex flex-col gap-3" id="match-left">
+      <div class="match-item" data-id="a" onclick="selM('left',this)">ആയാമം</div>
+      <div class="match-item" data-id="b" onclick="selM('left',this)">പീരിയഡ്</div>
+      <div class="match-item" data-id="c" onclick="selM('left',this)">ആവൃത്തി</div>
+      <div class="match-item" data-id="d" onclick="selM('left',this)">തരംഗദൈർഘ്യം</div>
+      <div class="match-item" data-id="e" onclick="selM('left',this)">തരംഗവേഗം</div>
+      <div class="match-item" data-id="f" onclick="selM('left',this)">അനുനാദം</div>
+    </div>
+    <div class="flex flex-col gap-3" id="match-right">
+      <div class="match-item" data-id="a" onclick="selM('right',this)">പരമാവധി സ്ഥാനാന്തരം</div>
+      <div class="match-item" data-id="b" onclick="selM('right',this)">ഒരു ആന്ദോളനത്തിന് ആവശ്യമായ സമയം</div>
+      <div class="match-item" data-id="c" onclick="selM('right',this)">1 സെക്കൻഡിലെ ആന്ദോളനങ്ങൾ</div>
+      <div class="match-item" data-id="d" onclick="selM('right',this)">λ</div>
+      <div class="match-item" data-id="e" onclick="selM('right',this)">v = fλ</div>
+      <div class="match-item" data-id="f" onclick="selM('right',this)">സ്വാഭാവിക ആവൃത്തി തുല്യം</div>
+    </div>
+  </div><button class="btn-action w-full mt-6" onclick="resetM()">റീസെറ്റ്</button></div>
+</div>
+
+<div id="modelQPScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>മോഡൽ ചോദ്യങ്ങൾ</h1></div>
+  <div class="content-card text-sm space-y-3">
+    <div class="text-center mb-3 border-b-2 pb-2"><h2 class="text-xl font-bold">മോഡൽ പേപ്പർ — ശബ്ദതരംഗങ്ങൾ</h2></div>
+    <p>1. ആയാമത്തിന്റെ SI യൂണിറ്റ് എന്ത്?</p>
+    <p>2. f = 1/T എന്ന ബന്ധം എഴുതുക.</p>
+    <p>3. അനുനാദം എന്നാൽ എന്ത്?</p>
+    <p>4. ശബ്ദതരംഗം ഏത് തരം തരംഗമാണ്?</p>
+    <p>5. v = fλ എന്ന ഫോർമുല എഴുതുക.</p>
+    <p>6. പ്രതിധ്വനിയുടെ ഒരു പ്രയോഗം പറയുക.</p>
+    <button class="btn-action w-full mt-4" onclick="document.getElementById('modelAnswers').classList.toggle('hidden')">ഉത്തരങ്ങൾ കാണിക്കുക</button>
+    <div id="modelAnswers" class="hidden mt-3 p-3 bg-green-50 border border-green-200 rounded-xl space-y-2">
+      <p>1) മീറ്റർ (m)</p>
+      <p>2) ആവൃത്തി = 1 / പീരിയഡ്</p>
+      <p>3) സ്വാഭാവിക ആവൃത്തികൾ തുല്യമായാൽ ഉണ്ടാകുന്ന പ്രതിഭാസം</p>
+      <p>4) അനുദൈർഘ്യ തരംഗം / യാന്ത്രികതരംഗം</p>
+      <p>5) തരംഗവേഗം = ആവൃത്തി × തരംഗദൈർഘ്യം</p>
+      <p>6) സോണാർ / സ്റ്റെതസ്കോപ്പ് / ഹാൾ സീലിങ്</p>
+    </div>
+  </div>
+</div>
+
+<div id="unitTestScreen" class="screen">
+  <div class="header no-print"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>യൂണിറ്റ് ടെസ്റ്റ്</h1></div>
+  <div class="flex gap-3 mb-4 no-print px-4">
+    <button class="flex-1 bg-blue-100 text-blue-700 py-3 rounded-xl font-bold" onclick="window.print()">🖨️ പ്രിന്റ്</button>
+    <button class="flex-1 bg-red-100 text-red-700 py-3 rounded-xl font-bold" onclick="downloadPDF()">⬇️ PDF ഡൗൺലോഡ്</button>
+  </div>
+  <div class="content-card text-base mx-4 space-y-4" id="printableQP" style="padding:28px">
+    <div class="text-center mb-4 border-b-2 border-black pb-2">
+      <h2 class="text-2xl font-bold">യൂണിറ്റ് ടെസ്റ്റ്</h2>
+      <p>സ്റ്റാൻഡേർഡ് X | ഭൗതികശാസ്ത്രം | Chapter 1: Sound Waves | സമയം: 45 മിനിറ്റ് | മാർക്ക്: 20</p>
+    </div>
+    <p class="font-bold text-lg">വിഭാഗം A (1 മാർക്ക്)</p>
+    <p>1. ആയാമത്തിന്റെ SI യൂണിറ്റ്?</p>
+    <p>2. f = ?</p>
+    <p>3. ശബ്ദതരംഗത്തിന് മാധ്യമം ആവശ്യമുണ്ടോ?</p>
+    <p class="font-bold text-lg mt-4">വിഭാഗം B (2 മാർക്ക്)</p>
+    <p>4. പീരിയഡും ആവൃത്തിയും തമ്മിലുള്ള ബന്ധം.</p>
+    <p>5. അനുനാദം നിർവചിക്കുക.</p>
+    <p>6. അനുദൈർഘ്യതരംഗത്തിന്റെ ഉദാഹരണം.</p>
+    <p class="font-bold text-lg mt-4">വിഭാഗം C (3 മാർക്ക്)</p>
+    <p>7. v = fλ വിശദീകരിക്കുക.<br>8. പ്രതിധ്വനിയുടെ പ്രയോഗങ്ങൾ.</p>
+    <p class="font-bold text-lg mt-4">വിഭാഗം D (5 മാർക്ക്)</p>
+    <p>9. (a) ആന്ദോളനം, ആയാമം, പീരിയഡ്, ആവൃത്തി നിർവചിക്കുക.<br>(b) 175 Hz ആവൃത്തിയുള്ള ശബ്ദതരംഗത്തിന്റെ തരംഗദൈർഘ്യം 2 m ആണ്. ശബ്ദവേഗം കണക്കാക്കുക.</p>
+  </div>
+</div>
+
+<div id="chapterTestScreen" class="screen">
+  <div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>അധ്യായ പരീക്ഷ</h1>
+    <div id="ctProgress" class="font-bold bg-white text-sky-700 px-3 py-1 rounded-lg">1/15</div>
+  </div>
+  <div class="content-card min-h-[300px]">
+    <div id="ctQuestionArea">
+      <h3 id="ctQuestionText" class="font-bold text-xl mb-6"></h3>
+      <div id="ctOptionsGrid" class="grid gap-3"></div>
+    </div>
+    <div id="ctResultArea" style="display:none" class="text-center py-4">
+      <div class="text-7xl">📚</div>
+      <h2 class="text-3xl font-bold text-sky-600 my-3">അധ്യായ പരീക്ഷ പൂർത്തിയായി!</h2>
+      <p class="text-xl font-bold mb-6">സ്കോർ: <span id="ctFinalScore" class="text-4xl text-blue-600">0</span>/15</p>
+      <button class="btn-action w-full py-4" onclick="initChapterTest()">വീണ്ടും ശ്രമിക്കുക</button>
+    </div>
+  </div>
+</div>
+
+<div id="selfAssessScreen" class="screen"><div class="header"><button class="back-btn" onclick="showScreen('homeScreen')">⬅</button><h1>സ്വയം വിലയിരുത്തൽ</h1></div>
+  <div class="content-card space-y-4">
+    <p class="font-bold text-lg text-center">നിങ്ങളുടെ മനസ്സിലാക്കൽ നിരക്ക് (1–5)</p>
+    <div class="space-y-3">
+      <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg"><span>ആന്ദോളനവും ആയാമവും</span><select class="border rounded p-1 font-bold"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg"><span>പീരിയഡ് & ആവൃത്തി</span><select class="border rounded p-1 font-bold"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg"><span>അനുനാദം</span><select class="border rounded p-1 font-bold"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg"><span>തരംഗ സവിശേഷതകൾ</span><select class="border rounded p-1 font-bold"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg"><span>പ്രതിധ്വനി</span><select class="border rounded p-1 font-bold"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+    </div>
+    <button class="btn-action w-full" onclick="showToast('സ്വയം വിലയിരുത്തൽ സേവ് ചെയ്തു!')">സേവ് ചെയ്യുക</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function showToast(m,d=2200,ok=true){const t=document.getElementById('toast');t.innerText=m;t.style.background=ok?'#0284c7':'#ef4444';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function mcq(q,o,bank,callback){const it=bank[Math.floor(Math.random()*bank.length)];document.getElementById(q).innerText=it.q;const box=document.getElementById(o);box.innerHTML='';shuffle(it.o).forEach(x=>{const b=document.createElement('button');b.className='quiz-opt py-3';b.innerText=x;b.onclick=()=>{if(x===it.a){showToast('ശരി!');setTimeout(callback,700);}else showToast('തെറ്റ്',1400,false);};box.appendChild(b);});}
+
+function initAmp(){const bank=[{q:'ആയാമത്തിന്റെ SI യൂണിറ്റ്?',a:'മീറ്റർ (m)',o:['മീറ്റർ (m)','സെക്കൻഡ്','ഹെർട്സ്','m/s']},{q:'തുലനസ്ഥാനത്ത് നിന്ന് പരമാവധി സ്ഥാനാന്തരം?',a:'ആയാമം',o:['ആയാമം','പീരിയഡ്','ആവൃത്തി','വേഗം']}];mcq('ampQ','ampOpts',bank,initAmp);}
+function initPeriod(){const bank=[{q:'ഒരു ആന്ദോളനം പൂർത്തിയാക്കാൻ ആവശ്യമായ സമയം?',a:'പീരിയഡ്',o:['പീരിയഡ്','ആവൃത്തി','ആയാമം','വേഗം']},{q:'30 ആന്ദോളനങ്ങൾക്ക് 60 s. ഒരു ആന്ദോളനത്തിന്?',a:'2 s',o:['2 s','1 s','0.5 s','30 s']}];mcq('perQ','perOpts',bank,initPeriod);}
+function initFreq(){const bank=[{q:'ഒരു സെക്കൻഡിലെ ആന്ദോളനങ്ങളുടെ എണ്ണം?',a:'ആവൃത്തി',o:['ആവൃത്തി','പീരിയഡ്','ആയാമം','λ']},{q:'f = 1/T ആണോ?',a:'അതെ',o:['അതെ','അല്ല']}];mcq('frQ','frOpts',bank,initFreq);}
+function initWave(){const bank=[{q:'തരംഗദൈർഘ്യത്തിന്റെ ചിഹ്നം?',a:'λ',o:['λ','f','T','v']},{q:'അടുത്തടുത്ത രണ്ട് ശൃംഗങ്ങൾ തമ്മിലുള്ള അകലം?',a:'തരംഗദൈർഘ്യം',o:['തരംഗദൈർഘ്യം','ആയാമം','പീരിയഡ്','വേഗം']}];mcq('wvQ','wvOpts',bank,initWave);}
+function initSpeed(){const bank=[{q:'v = ?',a:'f × λ',o:['f × λ','f / λ','λ / f','f + λ']},{q:'175 Hz, λ=2 m. v=?',a:'350 m/s',o:['350 m/s','175 m/s','87.5 m/s','700 m/s']}];mcq('spQ','spOpts',bank,initSpeed);}
+function initRes(){const bank=[{q:'സ്വാഭാവിക ആവൃത്തികൾ തുല്യമായാൽ?',a:'അനുനാദം',o:['അനുനാദം','പ്രതിധ്വനി','ആന്ദോളനം','തരംഗം']}];mcq('rsQ','rsOpts',bank,initRes);}
+function initType(){const bank=[{q:'ശബ്ദതരംഗം ഏത് തരം?',a:'അനുദൈർഘ്യം',o:['അനുദൈർഘ്യം','അനുപ്രസ്ഥം','വൈദ്യുതകാന്തികം','ഇല്ല']}];mcq('tyQ','tyOpts',bank,initType);}
+function initEcho(){const bank=[{q:'ശബ്ദം പ്രതലത്തിൽ തട്ടി മടങ്ങുന്നത്?',a:'പ്രതിധ്വനി',o:['പ്രതിധ്വനി','അനുനാദം','ആന്ദോളനം','തരംഗം']}];mcq('ecQ','ecOpts',bank,initEcho);}
+
+function initPend(){const bank=[{q:'പെൻഡുലത്തിന്റെ നീളം കൂടിയാൽ ആവൃത്തി?',a:'കുറയുന്നു',o:['കുറയുന്നു','കൂടുന്നു','മാറില്ല','ഇരട്ടിയാകും']}];mcq('pdQ','pdOpts',bank,initPend);}
+function initTuning(){const bank=[{q:'ട്യൂണിങ് ഫോർക്കിലെ എണ്ണം സൂചിപ്പിക്കുന്നത്?',a:'ആവൃത്തി',o:['ആവൃത്തി','പീരിയഡ്','ആയാമം','വേഗം']}];mcq('tuQ','tuOpts',bank,initTuning);}
+function initMed(){const bank=[{q:'ശബ്ദത്തിന് മാധ്യമം ആവശ്യമുണ്ടോ?',a:'ഉണ്ട്',o:['ഉണ്ട്','ഇല്ല']}];mcq('mdQ','mdOpts',bank,initMed);}
+function initLong(){const bank=[{q:'ഉച്ചമർദ്ദമേഖലകൾ ഉണ്ടാകുന്നത്?',a:'അനുദൈർഘ്യ തരംഗം',o:['അനുദൈർഘ്യ തരംഗം','അനുപ്രസ്ഥ തരംഗം']}];mcq('lgQ','lgOpts',bank,initLong);}
+function initTrans(){const bank=[{q:'ശൃംഗങ്ങളും താഴ്‌വാരങ്ങളും ഉണ്ടാകുന്നത്?',a:'അനുപ്രസ്ഥ തരംഗം',o:['അനുപ്രസ്ഥ തരംഗം','അനുദൈർഘ്യ തരംഗം']}];mcq('trQ','trOpts',bank,initTrans);}
+function initVFL(){const bank=[{q:'v = fλ ശരിയാണോ?',a:'അതെ',o:['അതെ','അല്ല']}];mcq('vfQ','vfOpts',bank,initVFL);}
+function initApp(){const bank=[{q:'സ്റ്റെതസ്കോപ്പിൽ ഉപയോഗിക്കുന്നത്?',a:'പ്രേരിതകമനം & അനുനാദം',o:['പ്രേരിതകമനം & അനുനാദം','പ്രതിധ്വനി മാത്രം','തരംഗദൈർഘ്യം','ഇല്ല']}];mcq('apQ','apOpts',bank,initApp);}
+let currentTFL={};
+function initTFLogic(){const bank=[{q:'f = 1/T ശരിയാണ്.',a:true},{q:'ശബ്ദത്തിന് മാധ്യമം ആവശ്യമില്ല.',a:false},{q:'v = fλ ശരിയാണ്.',a:true}];currentTFL=bank[Math.floor(Math.random()*bank.length)];document.getElementById('tflQ').innerText=currentTFL.q;}
+function checkTFL(ans){if(ans===currentTFL.a){showToast('ശരി!');setTimeout(initTFLogic,800);}else showToast('തെറ്റ്',1400,false);}
+
+const memoryPairs=[{id:1,val:'ആയാമം'},{id:1,val:'Amplitude'},{id:2,val:'പീരിയഡ്'},{id:2,val:'T'},{id:3,val:'ആവൃത്തി'},{id:3,val:'f'},{id:4,val:'തരംഗദൈർഘ്യം'},{id:4,val:'λ'},{id:5,val:'തരംഗവേഗം'},{id:5,val:'v=fλ'},{id:6,val:'അനുനാദം'},{id:6,val:'Resonance'}];
+let flipped=[],matched=0,moves=0;
+function initMem(){const g=document.getElementById('memoryGrid');g.innerHTML='';flipped=[];matched=0;moves=0;document.getElementById('memoryMoves').innerText='നീക്കങ്ങൾ: 0';shuffle(memoryPairs).forEach(it=>{const c=document.createElement('div');c.className='memory-card font-bold';c.dataset.id=it.id;c.innerHTML='<div>'+it.val+'</div>';c.onclick=()=>flip(c);g.appendChild(c);});}
+function flip(card){if(flipped.length<2&&!card.classList.contains('revealed')&&!card.classList.contains('matched')){card.classList.add('revealed');flipped.push(card);if(flipped.length===2){moves++;document.getElementById('memoryMoves').innerText='നീക്കങ്ങൾ: '+moves;setTimeout(()=>{const[a,b]=flipped;if(a.dataset.id===b.dataset.id){a.classList.replace('revealed','matched');b.classList.replace('revealed','matched');matched+=2;if(matched===memoryPairs.length)showToast('നിങ്ങൾ ജയിച്ചു!');}else{a.classList.remove('revealed');b.classList.remove('revealed');}flipped=[];},700);}}}
+
+let racePts=0;
+function initRace(){racePts=0;document.getElementById('racePts').innerText=0;document.getElementById('raceCar').style.left='0%';nextRace();}
+function nextRace(){const bank=[{q:'f = 1/T ?',a:'ശരി',o:['ശരി','തെറ്റ്']},{q:'v = ?',a:'fλ',o:['fλ','f/λ','λ/f']},{q:'ശബ്ദം ഏത് തരം?',a:'അനുദൈർഘ്യം',o:['അനുദൈർഘ്യം','അനുപ്രസ്ഥം']}];const it=bank[Math.floor(Math.random()*bank.length)];document.getElementById('raceQ').innerText=it.q;const box=document.getElementById('raceOpts');box.innerHTML='';shuffle(it.o).forEach(o=>{const b=document.createElement('button');b.className='quiz-opt py-4 text-xl';b.innerText=o;b.onclick=()=>{if(o===it.a){racePts=Math.min(100,racePts+20);showToast('+20');}else showToast('തെറ്റ്',900,false);document.getElementById('racePts').innerText=racePts;document.getElementById('raceCar').style.left=racePts+'%';if(racePts>=100)showToast('ജയിച്ചു! 🏆',3000);else nextRace();};box.appendChild(b);});}
+
+let qkScore=0;
+function initQuick(){const bank=[{q:'ആയാമം യൂണിറ്റ്?',a:'m',o:['m','s']},{q:'f=1/T?',a:'ശരി',o:['ശരി','തെറ്റ്']}];const it=bank[Math.floor(Math.random()*bank.length)];document.getElementById('qkQ').innerText=it.q;const box=document.getElementById('qkOpts');box.innerHTML='';shuffle(it.o).forEach(o=>{const b=document.createElement('button');b.className='quiz-opt py-4 text-xl';b.innerText=o;b.onclick=()=>{if(o===it.a){qkScore++;showToast('+1');}else{qkScore=0;showToast('റീസെറ്റ്',1000,false);}document.getElementById('qkScore').innerText='സ്കോർ: '+qkScore;initQuick();};box.appendChild(b);});}
+
+let currentTF={};
+function initTrueFalse(){const bank=[{q:'f = 1/T ശരിയാണ്.',a:true},{q:'ശബ്ദത്തിന് മാധ്യമം ആവശ്യമില്ല.',a:false},{q:'v = fλ ശരിയാണ്.',a:true}];currentTF=bank[Math.floor(Math.random()*bank.length)];document.getElementById('tfQ').innerText=currentTF.q;}
+function checkTF(ans){if(ans===currentTF.a){showToast('ശരി!');setTimeout(initTrueFalse,800);}else showToast('തെറ്റ്',1400,false);}
+
+let fillData={};
+function initFillBlank(){const bank=[{q:'f = 1 / _____',ans:'T'},{q:'v = f × _____',ans:'λ'},{q:'ആയാമത്തിന്റെ യൂണിറ്റ് _____',ans:'m'}];fillData=bank[Math.floor(Math.random()*bank.length)];document.getElementById('fbQ').innerText=fillData.q;document.getElementById('fbAns').value='';}
+function checkFillBlank(){if(document.getElementById('fbAns').value.replace(/\s/g,'').toLowerCase()===fillData.ans.replace(/\s/g,'').toLowerCase()){showToast('ശരി!');setTimeout(initFillBlank,800);}else showToast('തെറ്റ്',1400,false);}
+
+function initSpotError(){const bank=[{q:'ഏതാണ് തെറ്റ്?',a:'ശബ്ദത്തിന് മാധ്യമം ആവശ്യമില്ല',o:['f=1/T','v=fλ','ശബ്ദത്തിന് മാധ്യമം ആവശ്യമില്ല','ആയാമം m-ൽ']}];const it=bank[Math.floor(Math.random()*bank.length)];document.getElementById('seQ').innerText=it.q;const box=document.getElementById('seOpts');box.innerHTML='';shuffle(it.o).forEach(x=>{const b=document.createElement('button');b.className='quiz-opt py-3';b.innerText=x;b.onclick=()=>{if(x===it.a){showToast('ശരി!');setTimeout(initSpotError,800);}else showToast('തെറ്റ്',1400,false);};box.appendChild(b);});}
+
+let mgL=null,mgR=null;
+function initMatchGame(){const left=[{id:'a',text:'ആയാമം'},{id:'b',text:'പീരിയഡ്'},{id:'c',text:'ആവൃത്തി'},{id:'d',text:'λ'},{id:'e',text:'v=fλ'}];const right=[{id:'a',text:'Amplitude'},{id:'b',text:'T'},{id:'c',text:'f'},{id:'d',text:'തരംഗദൈർഘ്യം'},{id:'e',text:'തരംഗവേഗം'}];const l=document.getElementById('mg-left'),r=document.getElementById('mg-right');l.innerHTML='';r.innerHTML='';shuffle(left).forEach(it=>{const d=document.createElement('div');d.className='match-item';d.dataset.id=it.id;d.innerText=it.text;d.onclick=()=>selMG('left',d);l.appendChild(d);});shuffle(right).forEach(it=>{const d=document.createElement('div');d.className='match-item';d.dataset.id=it.id;d.innerText=it.text;d.onclick=()=>selMG('right',d);r.appendChild(d);});mgL=mgR=null;}
+function selMG(side,el){if(el.classList.contains('matched'))return;document.querySelectorAll('#mg-'+side+' .match-item:not(.matched)').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');if(side==='left')mgL=el;else mgR=el;if(mgL&&mgR){if(mgL.dataset.id===mgR.dataset.id){mgL.className=mgR.className='match-item matched';showToast('ജോടി!');}else{showToast('തെറ്റ്',800,false);mgL.classList.remove('selected');mgR.classList.remove('selected');}mgL=mgR=null;}}
+
+let buData={};
+function initBuilder(){const bank=[{q:'തരംഗവേഗം ഫോർമുല?',ans:'v=fλ'},{q:'ആവൃത്തി ഫോർമുല?',ans:'f=1/T'}];buData=bank[Math.floor(Math.random()*bank.length)];document.getElementById('buQ').innerText=buData.q;document.getElementById('buAns').value='';}
+function checkBuilder(){if(document.getElementById('buAns').value.replace(/\s/g,'').toLowerCase()===buData.ans.replace(/\s/g,'').toLowerCase()){showToast('ശരി!');setTimeout(initBuilder,800);}else showToast('തെറ്റ്',1400,false);}
+
+let qfScore=0;
+function initQuickFire(){const bank=[{q:'f=1/T?',a:'ശരി',o:['ശരി','തെറ്റ്']},{q:'v=?',a:'fλ',o:['fλ','f/λ']}];const it=bank[Math.floor(Math.random()*bank.length)];document.getElementById('qfQ').innerText=it.q;const box=document.getElementById('qfOpts');box.innerHTML='';shuffle(it.o).forEach(o=>{const b=document.createElement('button');b.className='quiz-opt py-4 text-xl';b.innerText=o;b.onclick=()=>{if(o===it.a){qfScore++;showToast('+1');}else{qfScore=Math.max(0,qfScore-1);showToast('-1',800,false);}document.getElementById('qfScore').innerText='സ്കോർ: '+qfScore;initQuickFire();};box.appendChild(b);});}
+
+let srScore=0;
+function initSumRace(){srScore=0;document.getElementById('srPts').innerText=0;nextSumRace();}
+function nextSumRace(){const bank=[{q:'ആയാമം യൂണിറ്റ്?',a:'m',o:['m','s','Hz']},{q:'ശബ്ദം ഏത്?',a:'അനുദൈർഘ്യം',o:['അനുദൈർഘ്യം','അനുപ്രസ്ഥം']}];const it=bank[Math.floor(Math.random()*bank.length)];document.getElementById('srQ').innerText=it.q;const box=document.getElementById('srOpts');box.innerHTML='';shuffle(it.o).forEach(o=>{const b=document.createElement('button');b.className='quiz-opt py-4 text-xl';b.innerText=o;b.onclick=()=>{if(o===it.a){srScore+=10;showToast('+10');}else showToast('തെറ്റ്',900,false);document.getElementById('srPts').innerText=srScore;nextSumRace();};box.appendChild(b);});}
+
+const quizData=[{q:'ആയാമത്തിന്റെ SI യൂണിറ്റ്?',o:['മീറ്റർ (m)','സെക്കൻഡ്','ഹെർട്സ്','m/s'],a:0},{q:'f = 1/T ശരിയാണോ?',o:['അതെ','അല്ല'],a:0},{q:'30 ആന്ദോളനങ്ങൾക്ക് 60 s. T=?',o:['2 s','1 s','0.5 s','30 s'],a:0},{q:'ഒരു സെക്കൻഡിലെ ആന്ദോളനങ്ങൾ?',o:['ആവൃത്തി','പീരിയഡ്','ആയാമം','λ'],a:0},{q:'v = ?',o:['f × λ','f / λ','λ / f','f + λ'],a:0},{q:'175 Hz, λ=2 m. v=?',o:['350 m/s','175 m/s','87.5 m/s','700 m/s'],a:0},{q:'സ്വാഭാവിക ആവൃത്തികൾ തുല്യമായാൽ?',o:['അനുനാദം','പ്രതിധ്വനി','ആന്ദോളനം','തരംഗം'],a:0},{q:'ശബ്ദതരംഗം ഏത് തരം?',o:['അനുദൈർഘ്യം','അനുപ്രസ്ഥം','വൈദ്യുതകാന്തികം','ഇല്ല'],a:0},{q:'ശബ്ദത്തിന് മാധ്യമം ആവശ്യമുണ്ടോ?',o:['ഉണ്ട്','ഇല്ല'],a:0},{q:'തരംഗദൈർഘ്യത്തിന്റെ ചിഹ്നം?',o:['λ','f','T','v'],a:0},{q:'ഉച്ചമർദ്ദമേഖലകൾ ഉണ്ടാകുന്നത്?',o:['അനുദൈർഘ്യ തരംഗം','അനുപ്രസ്ഥ തരംഗം'],a:0},{q:'ശൃംഗങ്ങളും താഴ്‌വാരങ്ങളും?',o:['അനുപ്രസ്ഥ തരംഗം','അനുദൈർഘ്യ തരംഗം'],a:0},{q:'പ്രതിധ്വനി എന്നാൽ?',o:['ശബ്ദം പ്രതലത്തിൽ തട്ടി മടങ്ങുന്നത്','അനുനാദം','ആന്ദോളനം','തരംഗം'],a:0},{q:'സ്റ്റെതസ്കോപ്പിൽ ഉപയോഗിക്കുന്നത്?',o:['പ്രേരിതകമനം & അനുനാദം','പ്രതിധ്വനി മാത്രം','തരംഗദൈർഘ്യം','ഇല്ല'],a:0},{q:'പെൻഡുലം നീളം കൂടിയാൽ ആവൃത്തി?',o:['കുറയുന്നു','കൂടുന്നു','മാറില്ല','ഇരട്ടിയാകും'],a:0},{q:'ട്യൂണിങ് ഫോർക്കിലെ എണ്ണം?',o:['ആവൃത്തി','പീരിയഡ്','ആയാമം','വേഗം'],a:0},{q:'1 kHz = ?',o:['1000 Hz','100 Hz','10 Hz','1 Hz'],a:0},{q:'തരംഗവേഗത്തിന്റെ യൂണിറ്റ്?',o:['m/s','m','Hz','s'],a:0},{q:'ആയാമം എന്നാൽ?',o:['പരമാവധി സ്ഥാനാന്തരം','സമയം','എണ്ണം','വേഗം'],a:0},{q:'v = fλ ശരിയാണോ?',o:['അതെ','അല്ല'],a:0}];
+let qi=0,qs=0;
+function initQuiz(){qi=0;qs=0;document.getElementById('quizResultArea').style.display='none';document.getElementById('quizQuestionArea').style.display='block';loadQ();}
+function loadQ(){document.getElementById('quizProgress').innerText=(qi+1)+'/20';const q=quizData[qi];document.getElementById('questionText').innerText=(qi+1)+'. '+q.q;const og=document.getElementById('optionsGrid');og.innerHTML='';q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='quiz-opt py-3 text-left pl-4';b.innerText=o;b.onclick=()=>chkQ(i,b);og.appendChild(b);});}
+function chkQ(i,btn){const c=quizData[qi].a;document.querySelectorAll('#optionsGrid .quiz-opt').forEach(b=>b.disabled=true);if(i===c){btn.classList.add('bg-green-100','border-green-500');qs++;}else{btn.classList.add('bg-red-100','border-red-500');document.querySelectorAll('#optionsGrid .quiz-opt')[c].classList.add('bg-green-100','border-green-500');}setTimeout(()=>{qi++;if(qi<quizData.length)loadQ();else{document.getElementById('quizQuestionArea').style.display='none';document.getElementById('quizResultArea').style.display='block';document.getElementById('finalScore').innerText=qs;}},1000);}
+
+let mL=null,mR=null;
+function selM(side,el){if(el.classList.contains('matched'))return;document.querySelectorAll('#match-'+side+' .match-item:not(.matched)').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');if(side==='left')mL=el;else mR=el;if(mL&&mR){if(mL.dataset.id===mR.dataset.id){mL.className=mR.className='match-item matched';showToast('ശരി!');}else{showToast('തെറ്റ്',800,false);mL.classList.remove('selected');mR.classList.remove('selected');}mL=mR=null;}}
+function resetM(){document.querySelectorAll('#matchScreen .match-item').forEach(e=>e.className='match-item');mL=mR=null;}
+
+const ctData=[{q:'ആയാമം യൂണിറ്റ്?',o:['m','s','Hz','m/s'],a:0},{q:'f=1/T?',o:['ശരി','തെറ്റ്'],a:0},{q:'v=fλ?',o:['ശരി','തെറ്റ്'],a:0},{q:'ശബ്ദം ഏത് തരം?',o:['അനുദൈർഘ്യം','അനുപ്രസ്ഥം'],a:0},{q:'മാധ്യമം ആവശ്യമുണ്ടോ?',o:['ഉണ്ട്','ഇല്ല'],a:0},{q:'അനുനാദം?',o:['സ്വാഭാവിക ആവൃത്തി തുല്യം','പ്രതിധ്വനി'],a:0},{q:'λ ചിഹ്നം?',o:['λ','f','T','v'],a:0},{q:'175Hz λ=2m v=?',o:['350 m/s','175 m/s'],a:0},{q:'പീരിയഡ്?',o:['ഒരു ആന്ദോളനത്തിന് സമയം','എണ്ണം'],a:0},{q:'ആവൃത്തി?',o:['1 സെക്കൻഡിലെ എണ്ണം','സമയം'],a:0},{q:'പ്രതിധ്വനി?',o:['ശബ്ദം മടങ്ങുന്നത്','അനുനാദം'],a:0},{q:'1 kHz=?',o:['1000 Hz','100 Hz'],a:0},{q:'പെൻഡുലം നീളം↑ ആവൃത്തി?',o:['കുറയുന്നു','കൂടുന്നു'],a:0},{q:'ട്യൂണിങ് ഫോർക്ക് എണ്ണം?',o:['ആവൃത്തി','പീരിയഡ്'],a:0},{q:'സ്റ്റെതസ്കോപ്പ്?',o:['പ്രേരിതകമനം','പ്രതിധ്വനി മാത്രം'],a:0}];
+let cti=0,cts=0;
+function initChapterTest(){cti=0;cts=0;document.getElementById('ctResultArea').style.display='none';document.getElementById('ctQuestionArea').style.display='block';loadCT();}
+function loadCT(){document.getElementById('ctProgress').innerText=(cti+1)+'/15';const q=ctData[cti];document.getElementById('ctQuestionText').innerText=(cti+1)+'. '+q.q;const og=document.getElementById('ctOptionsGrid');og.innerHTML='';q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='quiz-opt py-3 text-left pl-4';b.innerText=o;b.onclick=()=>chkCT(i,b);og.appendChild(b);});}
+function chkCT(i,btn){const c=ctData[cti].a;document.querySelectorAll('#ctOptionsGrid .quiz-opt').forEach(b=>b.disabled=true);if(i===c){btn.classList.add('bg-green-100','border-green-500');cts++;}else{btn.classList.add('bg-red-100','border-red-500');document.querySelectorAll('#ctOptionsGrid .quiz-opt')[c].classList.add('bg-green-100','border-green-500');}setTimeout(()=>{cti++;if(cti<ctData.length)loadCT();else{document.getElementById('ctQuestionArea').style.display='none';document.getElementById('ctResultArea').style.display='block';document.getElementById('ctFinalScore').innerText=cts;}},1000);}
+
+function downloadPDF(){html2pdf().set({margin:12,filename:'Std10_Physics_Ch1_UnitTest.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4'}}).from(document.getElementById('printableQP')).save();}
+
+window.onload=()=>{initAmp();initPeriod();initFreq();initWave();initSpeed();initRes();initType();initEcho();initPend();initTuning();initMed();initLong();initTrans();initVFL();initApp();initTFLogic();initMem();initRace();initQuick();initTrueFalse();initFillBlank();initSpotError();initMatchGame();initBuilder();initQuickFire();initSumRace();};
+</script>
+</body>
+</html>
